@@ -190,7 +190,7 @@ spring:
       base-url: http://localhost:11434
 ```
 
-## 🎯 Key Design Patterns
+##  Key Design Patterns
 
 1. **Service-Repository Pattern**: Clean separation of concerns
 2. **MVC Architecture**: Controllers → Services → Repositories → Entities
@@ -207,7 +207,7 @@ All UI components include:
 - Responsive typography
 - Fixed action buttons for primary actions
 
-## 🔐 Security Notes
+##  Security Notes
 
 For hackathon mode, this implementation uses:
 - Simple user switcher (no OAuth/Login)
@@ -221,7 +221,7 @@ For hackathon mode, this implementation uses:
 - Database audit logging
 - API rate limiting
 
-## 🧪 Testing the System
+##  Testing the System
 
 1. **Seed test data**: Click "Seed Test Data" button
 2. **Doctor flow**:
@@ -252,7 +252,7 @@ For hackathon mode, this implementation uses:
 8. Doctor signs record
 9. Patient can view summary and prescription
 
-## 🚀 Performance Optimizations
+##  Performance Optimizations
 
 - H2 in-memory database for instant queries
 - Lazy loading for User relationships
@@ -260,7 +260,7 @@ For hackathon mode, this implementation uses:
 - Static resource caching
 - RESTful API design
 
-## 📚 API Endpoints
+##  API Endpoints
 
 ```
 GET  / → Landing page with role selector
@@ -284,7 +284,7 @@ GET  /patient/view → Patient appointments
 GET  /patient/record/{id} → View medical record
 ```
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 **Cannot connect to Ollama**
 - Ensure Ollama is running: `ollama serve`
@@ -304,10 +304,10 @@ Built for hackathon purposes. Use freely with attribution.
 
 ## 👥 Contributors
 
-Developed as part of "MediScribe AI" hackathon project.
+Developed as part of "Noctor System" hackathon project.
 
 ---
 
-**Status**: ✅ Ready for deployment and testing
+**Status**:  Ready for deployment and testing
 
 **Last Updated**: December 2025
