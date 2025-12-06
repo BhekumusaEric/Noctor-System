@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Detail - MediScribe AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .patient-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .section-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #212529;
+        }
+        .soap-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .soap-section-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .soap-section-content {
+            color: #495057;
+            line-height: 1.6;
+        }
+        .record-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #667eea;
+        }
+        .btn-primary-lg {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .loading {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand">🏥 MediScribe AI - Consultation</span>
+            <a th:href="@{/doctor/dashboard(doctorId=${doctorId})}" class="btn btn-light btn-sm">← Back</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-3 px-md-4 py-4">
+        <!-- Patient Info -->
+        <div class="patient-header" th:if="${appointment}">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h4 class="mb-1" th:text="${appointment.patient.name}"></h4>
+                    <small class="text-muted">
+                        Patient ID: <span th:text="${appointment.patient.id}"></span>
+                    </small>
+                </div>
+                <div class="col-auto">
+                    <span class="badge" 
+                          th:classappend="${appointment.triagePriority.name() == 'HIGH' ? 'bg-danger' : appointment.triagePriority.name() == 'MEDIUM' ? 'bg-warning' : 'bg-success'}"
+                          th:text="${appointment.triagePriority.name() + ' Priority'}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rough Notes Input (if no record yet) -->
+        <div th:if="${record == null}" class="section-card">
+            <h5 class="section-title">📝 Record Consultation Notes</h5>
+            <form th:if="${appointment}" 
+                  th:action="@{/doctor/record-consultation/{id}(id=${appointment.id})}" 
+                  method="POST" 
+                  class="record-form">
+                <input type="hidden" name="doctorId" th:value="${doctorId}">
+                <div class="mb-3">
+                    <label for="roughNotes" class="form-label">Consultation Notes</label>
+                    <textarea class="form-control" id="roughNotes" name="roughNotes" rows="8" 
+                              placeholder="Enter consultation details, symptoms, examination findings, etc." required></textarea>
+                    <small class="text-muted d-block mt-2">💡 Tip: You can dictate or paste your notes. Our AI will convert them to a structured SOAP note.</small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-primary-lg w-100">
+                    🤖 Generate SOAP Note & AI Summary
+                </button>
+            </form>
+        </div>
+
+        <!-- Generated Medical Record -->
+        <div th:if="${record != null}" class="section-card">
+            <h5 class="section-title">📋 Generated Medical Record</h5>
+
+            <!-- SOAP Note -->
+            <div class="mb-4">
+                <h6 class="mb-3" style="color: #667eea; font-weight: 700;">SOAP Note</h6>
+                <div th:if="${record.soapNote}" class="soap-note-content" th:utext="${record.soapNote}"></div>
+                <div th:unless="${record.soapNote}" class="text-muted">
+                    <em>SOAP note not generated yet</em>
+                </div>
+            </div>
+
+            <!-- Patient Summary -->
+            <div class="mb-4">
+                <h6 class="mb-3" style="color: #28a745; font-weight: 700;">📖 Patient-Friendly Summary</h6>
+                <div class="alert alert-info" th:if="${record.patientSummary}">
+                    <p th:utext="${record.patientSummary}" class="mb-0" style="line-height: 1.8;"></p>
+                </div>
+                <div th:unless="${record.patientSummary}" class="text-muted">
+                    <em>Summary not generated yet</em>
+                </div>
+            </div>
+
+            <!-- Prescription -->
+            <div class="mb-4">
+                <h6 class="mb-3" style="color: #ffc107; font-weight: 700;">💊 Prescription</h6>
+                <div class="alert alert-warning" th:if="${record.prescription}">
+                    <p th:utext="${record.prescription}" class="mb-0" style="white-space: pre-wrap; font-family: monospace;"></p>
+                </div>
+                <div th:unless="${record.prescription}" class="text-muted">
+                    <em>No prescription recommended</em>
+                </div>
+            </div>
+
+            <!-- Sign Record -->
+            <form th:if="${!record.isSigned}" 
+                  th:action="@{/doctor/sign-record/{id}(id=${record.id})}" 
+                  method="POST">
+                <input type="hidden" name="doctorId" th:value="${doctorId}">
+                <input type="hidden" name="appointmentId" th:value="${appointment.id}">
+                <button type="submit" class="btn btn-success btn-primary-lg w-100">
+                    ✍️ Sign & Finalize Record
+                </button>
+            </form>
+            
+            <div th:if="${record.isSigned}" class="alert alert-success">
+                <strong>✅ Record Signed</strong> - Medical record has been finalized and is ready for patient viewing.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

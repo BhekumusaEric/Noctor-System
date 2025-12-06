@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Dashboard - MediScribe AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nurse-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .nurse-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nurse-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .appointment-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        .appointment-card.high {
+            border-left-color: #dc3545;
+        }
+        .appointment-card.medium {
+            border-left-color: #ffc107;
+        }
+        .appointment-card.low {
+            border-left-color: #28a745;
+        }
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .appointment-info h6 {
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .appointment-info small {
+            color: #6c757d;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .priority-badge.high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .priority-badge.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .priority-badge.low {
+            background: #d4edda;
+            color: #155724;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #212529;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .register-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .assign-doctor-dropdown {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark mb-4">
+        <div class="container-fluid">
+            <span class="navbar-brand">🏥 MediScribe AI - Nurse</span>
+            <a href="/" class="btn btn-light btn-sm">Switch Role</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-3 px-md-4 pb-5">
+        <!-- Nurse Header -->
+        <div class="nurse-header" th:if="${nurse}">
+            <div class="nurse-info">
+                <div class="nurse-avatar" th:text="${#strings.substring(nurse.name, 0, 1)}"></div>
+                <div>
+                    <h4 class="mb-0" th:text="${nurse.name}"></h4>
+                    <small class="text-muted" th:text="${nurse.status}"></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register New Patient -->
+        <section class="register-form mb-4">
+            <h5 class="section-title">➕ Register New Patient</h5>
+            <form method="POST" action="/nurse/register-patient">
+                <input type="hidden" name="nurseId" th:value="${nurseId}">
+                <div class="row g-2">
+                    <div class="col-12 col-md-6">
+                        <input type="text" class="form-control" name="patientName" 
+                               placeholder="Patient Name" required>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <select class="form-select" name="triagePriority" required>
+                            <option value="">Select Priority</option>
+                            <option value="HIGH">🔴 High Priority</option>
+                            <option value="MEDIUM">🟡 Medium Priority</option>
+                            <option value="LOW">🟢 Low Priority</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Waiting Patients Triage Queue -->
+        <section class="mb-5">
+            <h5 class="section-title">⏳ Waiting Patients (Triage Queue)</h5>
+            <div th:if="${waitingAppointments.isEmpty()}">
+                <div class="empty-state">
+                    <p>No waiting patients at this time</p>
+                </div>
+            </div>
+            <div th:unless="${waitingAppointments.isEmpty()}">
+                <div th:each="appointment : ${waitingAppointments}" 
+                     class="appointment-card" 
+                     th:classappend="${appointment.triagePriority.name().toLowerCase()}">
+                    <div class="appointment-header">
+                        <div class="appointment-info flex-grow-1">
+                            <h6 class="mb-1" th:text="${appointment.patient.name}"></h6>
+                            <small th:text="'Waiting time: Just now'"></small>
+                            <small th:text="'Patient ID: ' + ${appointment.patient.id}"></small>
+                        </div>
+                        <span class="priority-badge" 
+                              th:classappend="${appointment.triagePriority.name().toLowerCase()}" 
+                              th:text="${appointment.triagePriority.name()}"></span>
+                    </div>
+                    
+                    <!-- Assign Doctor -->
+                    <form th:action="@{/nurse/assign-doctor/{id}(id=${appointment.id})}" method="POST">
+                        <input type="hidden" name="nurseId" th:value="${nurseId}">
+                        <div class="row g-2">
+                            <div class="col-12 col-sm-8">
+                                <select class="form-select form-select-sm" name="doctorId" required>
+                                    <option value="">Select Doctor to Assign</option>
+                                    <option th:each="doctor : ${availableDoctors}" 
+                                            th:value="${doctor.id}" 
+                                            th:text="${doctor.name + ' (' + doctor.status + ')'}"></option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <button type="submit" class="btn btn-sm btn-primary w-100">Assign</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Available Doctors -->
+        <section>
+            <h5 class="section-title">👨‍⚕️ Available Doctors</h5>
+            <div th:if="${availableDoctors.isEmpty()}">
+                <div class="empty-state">
+                    <p>No available doctors at this time</p>
+                </div>
+            </div>
+            <div th:unless="${availableDoctors.isEmpty()}">
+                <div th:each="doctor : ${availableDoctors}" 
+                     class="appointment-card" 
+                     style="border-left-color: #667eea;">
+                    <div class="appointment-header">
+                        <div class="appointment-info flex-grow-1">
+                            <h6 class="mb-1" th:text="${doctor.name}"></h6>
+                            <small th:text="'Status: ' + ${doctor.status}"></small>
+                        </div>
+                        <span class="badge bg-success">Available</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

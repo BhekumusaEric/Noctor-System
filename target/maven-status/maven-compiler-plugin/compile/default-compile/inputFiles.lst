@@ -1,0 +1,17 @@
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/NoctorSystemApplication.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/doctor/DoctorService.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/Appointment.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/AppointmentStatus.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/MedicalRecord.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/TriagePriority.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/TriageService.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/User.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/domain/shared/UserRole.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/infrastructure/ai/LlamaAiService.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/infrastructure/persistence/AppointmentRepository.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/infrastructure/persistence/MedicalRecordRepository.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/infrastructure/persistence/UserRepository.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/presentation/DoctorController.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/presentation/MainController.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/presentation/NurseController.java
+/home/wtc/Noctor-System/src/main/java/com/wethinkcode/demo/presentation/PatientController.java
