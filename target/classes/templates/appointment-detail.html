@@ -91,7 +91,7 @@
         </div>
 
         <!-- Rough Notes Input (if no record yet) -->
-        <div th:if="${record == null}" class="section-card">
+        <div th:if="${record.id == null}" class="section-card">
             <h5 class="section-title">📝 Record Consultation Notes</h5>
             <form th:if="${appointment}" 
                   th:action="@{/doctor/record-consultation/{id}(id=${appointment.id})}" 

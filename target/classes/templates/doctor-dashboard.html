@@ -200,7 +200,7 @@
         <!-- Completed Records -->
         <section>
             <h5 class="section-title">✅ Completed Records</h5>
-            <div th:if="${#lists.isEmpty(doctorAppointments) or #lists.every(doctorAppointments, appointment -> appointment.status.name() != 'COMPLETED')}">
+            <div th:if="${#lists.isEmpty(doctorAppointments) or #lists.isEmpty(doctorAppointments.?[status.name() == 'COMPLETED'])}">
                 <div class="empty-state">
                     <p>No completed records yet</p>
                 </div>

@@ -5,7 +5,6 @@ com/wethinkcode/demo/domain/shared/MedicalRecord.class
 com/wethinkcode/demo/infrastructure/persistence/UserRepository.class
 com/wethinkcode/demo/presentation/MainController.class
 com/wethinkcode/demo/presentation/MainController$1.class
-com/wethinkcode/demo/presentation/DoctorController.class
 com/wethinkcode/demo/domain/shared/Appointment.class
 com/wethinkcode/demo/infrastructure/persistence/MedicalRecordRepository.class
 com/wethinkcode/demo/domain/shared/MedicalRecord$MedicalRecordBuilder.class

@@ -79,11 +79,20 @@ public class DoctorController {
             @RequestParam(defaultValue = "1") Long doctorId,
             Model model) {
         
-        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
-        Optional<MedicalRecord> record = medicalRecordRepository.findByAppointmentId(appointmentId);
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(appointmentId);
+        if (appointmentOptional.isEmpty()) {
+            return "redirect:/doctor/dashboard?doctorId=" + doctorId;
+        }
+        Appointment appointment = appointmentOptional.get();
+
+        MedicalRecord record = medicalRecordRepository.findByAppointmentId(appointmentId).orElseGet(() -> {
+            MedicalRecord newRecord = new MedicalRecord();
+            newRecord.setAppointmentId(appointmentId);
+            return newRecord;
+        });
         
-        model.addAttribute("appointment", appointment.orElse(null));
-        model.addAttribute("record", record.orElse(null));
+        model.addAttribute("appointment", appointment);
+        model.addAttribute("record", record);
         model.addAttribute("doctorId", doctorId);
         
         return "appointment-detail";
