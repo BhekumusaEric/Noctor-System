@@ -1,1 +1,6 @@
 /home/wtc/Noctor-System/src/test/java/com/wethinkcode/demo/NoctorSystemApplicationTests.java
+/home/wtc/Noctor-System/src/test/java/com/wethinkcode/demo/domain/doctor/AiDocumentationTest.java
+/home/wtc/Noctor-System/src/test/java/com/wethinkcode/demo/domain/doctor/DoctorStatusTest.java
+/home/wtc/Noctor-System/src/test/java/com/wethinkcode/demo/domain/shared/PatientEmpowermentTest.java
+/home/wtc/Noctor-System/src/test/java/com/wethinkcode/demo/domain/shared/TriageServiceTest.java
+/home/wtc/Noctor-System/src/test/java/com/wethinkcode/demo/infrastructure/persistence/PharmacyWorkflowTest.java

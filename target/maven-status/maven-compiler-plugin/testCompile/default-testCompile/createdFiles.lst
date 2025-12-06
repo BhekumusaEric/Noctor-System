@@ -1,1 +1,6 @@
+com/wethinkcode/demo/domain/doctor/DoctorStatusTest.class
+com/wethinkcode/demo/domain/shared/PatientEmpowermentTest.class
+com/wethinkcode/demo/domain/shared/TriageServiceTest.class
+com/wethinkcode/demo/domain/doctor/AiDocumentationTest.class
+com/wethinkcode/demo/infrastructure/persistence/PharmacyWorkflowTest.class
 com/wethinkcode/demo/NoctorSystemApplicationTests.class
