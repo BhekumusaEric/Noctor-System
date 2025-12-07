@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Portal - MediScribe AI</title>
@@ -110,7 +111,7 @@
     <nav class="navbar navbar-dark mb-4">
         <div class="container-fluid">
             <span class="navbar-brand">🏥 MediScribe AI - Patient Portal</span>
-            <a href="/" class="btn btn-light btn-sm">Switch Role</a>
+            <a href="/" class="btn btn-light btn-lg">Switch Role</a>
         </div>
     </nav>
 
@@ -165,7 +166,7 @@
                     <!-- Link to full record if completed -->
                     <div th:if="${appointment.status.name() == 'COMPLETED'}" class="mt-3">
                         <a th:href="@{/patient/record/{id}(id=${appointment.id},patientId=${patientId})}" 
-                           class="btn btn-sm btn-primary">
+                           class="btn btn-lg btn-primary">
                             📖 View My Health Summary
                         </a>
                     </div>
